@@ -4,7 +4,7 @@ const app = express();
 
 app.use(express.json());
 
-app.post( "/login",(req, res)=>{
+app.post( "/register",(req, res)=>{
     var nameformat = (/^[A-Za-z\s]*$/)
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     var passformat=  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
