@@ -8,25 +8,20 @@ const fs = require('fs');
 
 const app = express();
 app.use(express.json());
-const userData = fs.readFileSync("./users.json",{encoding : "utf8"});
-
-let users;
-if (userData) {
-    users = JSON.parse(userData ?? "");
-}
 
 
-const writeData = (user) => {
+const writeData = (users) => {
     // console.log(user)
-    
-    fs.appendFileSync("./users.json", JSON.stringify(user))
+    fs.writeFileSync("./users.json", JSON.stringify(users))
 }
 
 const readData = () => {
     
     if(fs.existsSync("./users.json")){
-        const allUsers = fs.readFileSync("./users.json")
-        return JSON.parse(allUsers)
+        const allUsers = fs.readFileSync("./users.json", { encoding: "utf-8"});
+        if (allUsers) {        
+            return JSON.parse(allUsers)
+        }
     }
     return []
 }
@@ -43,6 +38,7 @@ app.post( "/register",(req, res)=>{
         // or
         /// new insert
 
+        const users = readData();
         let userFound = -1;
         if(users){
             for (let i = 0; i < users.length; i ++) {
@@ -57,8 +53,9 @@ app.post( "/register",(req, res)=>{
         if (found !== -1) {
             // found object ...
         }*/
-
-        if (userFound === -1) {const user = {
+        
+        if (userFound === -1) {
+            const user = {
             name,
             email,
             password,
@@ -68,41 +65,67 @@ app.post( "/register",(req, res)=>{
         //     users = [user];
         // }
 
-
-        let oldUsers = readData()
-        // console.log(oldUsers)
-        oldUsers.push(writeData(user))
         
+        users.push(user)
+        
+        
+        writeData(users);
         
         res.send({message: "Registered successfully"});
 
         } else {
              // email found 
             // i : is the index of that userwhere email is matched.
-            users[userFound].name = name;
-            users[userFound].phoneNumber = phoneNumber;
-            users[userFound].password = password;
-            writeData(users);
+            res.send({message: "email already exist"});
         
         }
+        
        }
 else
 {
     res.status(401).send({ error : "Invalid Credentials" });
 }
 })
+
+
 let userMilGya = 0;
 app.post( "/login",(req, res)=>{
+    const users = readData();
     const { email, password } = req.body;
     for (let i = 0; i < users.length; i ++) {
+
         if ( email === users[i].email && password === users[i].password) {
             userMilGya = 1;
         } 
     }
-    if(userMilGya = 1)
+    if(userMilGya == 1)
     res.send({message:"Login Successfull"})
     else {
         res.send({message:"Login Failed"})
+    }
+})
+
+app.post("/searchuser",(req, res) => {
+    let userExist = 0;
+    let foundUser ;
+    const users = readData();
+    const { name } = req.body;
+    let allFindUsers = [];
+    
+    for (let i = 0; i < users.length; i ++) {
+
+        if ( name === users[i].name) {
+            userExist = 1;
+            foundUser = users[i];
+            console.log(foundUser)
+            allFindUsers.push(foundUser)
+        }
+    } 
+    if(userExist == 1){
+        res.send({ allFindUsers})
+    }
+    else{
+        res.send({message : "User not found"})
     }
 })
 
