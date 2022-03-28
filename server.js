@@ -109,15 +109,14 @@ app.post("/searchuser",(req, res) => {
     let userExist = 0;
     let foundUser ;
     const users = readData();
-    const { name } = req.body;
+    const { name, email } = req.body;
     let allFindUsers = [];
-    
+
     for (let i = 0; i < users.length; i ++) {
 
-        if ( name === users[i].name) {
+        if ( name === users[i].name || email === users[i].email) {
             userExist = 1;
             foundUser = users[i];
-            console.log(foundUser)
             allFindUsers.push(foundUser)
         }
     } 
