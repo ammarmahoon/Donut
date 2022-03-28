@@ -129,8 +129,6 @@ app.post("/searchuser",(req, res) => {
     }
 })
 
-
-
 app.listen(4000 , ()=>{
     console.log("server is live on port 4000")
 });
