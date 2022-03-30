@@ -114,9 +114,10 @@ app.post("/searchuser",(req, res) => {
 
     for (let i = 0; i < users.length; i ++) {
 
-        if ( name === users[i].name || email === users[i].email) {
+        if ( users[i].name.startsWith(name) || users[i].email.startsWith(email)){
             userExist = 1;
             foundUser = users[i];
+
             allFindUsers.push(foundUser)
         }
     } 
