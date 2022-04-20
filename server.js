@@ -4,11 +4,8 @@ const { contentType } = require("express/lib/response");
 // sconst userData = require('./src/users.json');
 const fs = require('fs');
 
-
-
 const app = express();
 app.use(express.json());
-
 
 const writeData = (users) => {
     // console.log(user)
@@ -52,8 +49,7 @@ app.post( "/register",(req, res)=>{
         /*const found = users.find((innerUser) => innerUser.email === email);
         if (found !== -1) {
             // found object ...
-        }*/
-        
+        }*/      
         if (userFound === -1) {
             const user = {
             name,
@@ -63,9 +59,7 @@ app.post( "/register",(req, res)=>{
         };
         // if (users === undefined) {
         //     users = [user];
-        // }
-
-        
+        // }       
         users.push(user)
         
         
@@ -109,12 +103,14 @@ app.post("/searchuser",(req, res) => {
     let userExist = 0;
     let foundUser ;
     const users = readData();
-    const { name, email } = req.body;
+    const { searchStr } = req.body;
+
     let allFindUsers = [];
 
     for (let i = 0; i < users.length; i ++) {
 
-        if ( users[i].name.startsWith(name) || users[i].email.startsWith(email)){
+        if ( ((users[i].name).toLowerCase()).startsWith(searchStr.toLowerCase()) 
+        || ((users[i].email).toLowerCase()).startsWith(searchStr.toLowerCase())){
             userExist = 1;
             foundUser = users[i];
 
@@ -127,6 +123,52 @@ app.post("/searchuser",(req, res) => {
     else{
         res.send({message : "User not found"})
     }
+})
+
+app.delete("/deleteuser",(req , res)=>{
+    const { phoneNumber } = req.query;
+    let users = readData()
+    let foundIndex = -1;
+    for(let i=0; i < users.length; i++ ){
+        if(phoneNumber === users[i].phoneNumber){
+            foundIndex = i;
+            break;
+        }
+    }
+    if(foundIndex !== -1){
+     users.splice(foundIndex, 1);
+     writeData(users)
+      console.log(users)
+                // sucess del
+                res.send({message : "Deleted Successfully"});
+    } else {
+        // not found
+        res.send({message : "User not found"});
+    }
+})
+
+app.put("/update",(req, res) => {
+
+    let requiredIndex = -1;
+    const users = readData();
+    let { name , phoneNumber , newPhoneNumber} = req.body;
+    for (let i = 0; i < users.length; i ++)
+    {
+        if ((users[i].phoneNumber)===phoneNumber)
+        {
+            requiredIndex = i;
+        }
+    }    
+   if(requiredIndex != -1){
+    if (newPhoneNumber){
+        users[requiredIndex].phoneNumber = newPhoneNumber;
+    }
+     if(name){
+        users[requiredIndex].name = name;
+    }
+    writeData(users);
+    res.send({ message : "User updated successfully"})
+}
 })
 
 app.listen(4000 , ()=>{
