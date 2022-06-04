@@ -1,12 +1,13 @@
 const { nameformat, mailformat, passformat, phoneno } = require( "./src/validation");
 const express = require ("express");
 const { contentType } = require("express/lib/response");
+const cors =require("cors")
 // sconst userData = require('./src/users.json');
 const fs = require('fs');
 
 const app = express();
 app.use(express.json());
-
+app.use(cors({origin:["http://localhost:3000"]}))
 const writeData = (users) => {
     // console.log(user)
     fs.writeFileSync("./users.json", JSON.stringify(users))
@@ -24,7 +25,9 @@ const readData = () => {
 }
 
 app.post( "/register",(req, res)=>{
-    const { name, email, password, phoneNumber } = req.body;
+    console.log('i am get req body');
+    console.log(req.body);
+    const { name, email, password, phoneNumber, role } = req.body;
     // users => array of all users
 
     if(name.match(nameformat) && 
@@ -55,11 +58,14 @@ app.post( "/register",(req, res)=>{
             name,
             email,
             password,
-            phoneNumber
+            phoneNumber,
+            role
         };
         // if (users === undefined) {
         //     users = [user];
-        // }       
+        // } 
+        console.log('new user data');
+        console.log(user);     
         users.push(user)
         
         
