@@ -96,12 +96,14 @@ app.post( "/login",(req, res)=>{
 
         if ( email === users[i].email && password === users[i].password) {
             userMilGya = 1;
-        } 
+        } else {
+            userMilGya = 0;
+        }
     }
     if(userMilGya == 1)
     res.send({message:"Login Successfull"})
     else {
-        res.send({message:"Login Failed"})
+        res.status(401).send({ error : "Incorrect Password" })
     }
 })
 

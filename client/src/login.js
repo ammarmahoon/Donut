@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react";
 import axios from "axios";
 
@@ -9,7 +9,7 @@ export default function Login (){
 
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
-
+    const Navigate = useNavigate()
     const onTextFieldChange = (e)=>{
         console.log(e.target.name)
         
@@ -32,6 +32,7 @@ export default function Login (){
                     password : password,
                 });
                 console.log("I am getting response from server", response);
+                Navigate('/welcome')
             } catch (e) {
                 console.log("I am getting error from server", e)              
             }
@@ -50,10 +51,10 @@ export default function Login (){
         <input name="mail" type={"email"} placeholder="abcxxxx@gmail.com" onChange={onTextFieldChange} value={email}></input><br/>
         <label>Password</label><br/>
         <input name="pwd" type={"password"} placeholder="********" onChange={onTextFieldChange} value={password}></input><br/>
+        <input type={"button"} value={"Submit"} onClick={handleRegister}></input>
         </form>
         <button>
-        <Link to={"/welcome"} onClick={handleRegister}>Submit</Link>
+        <Link to={"/signup"}>Don't have account</Link>
         </button>
         </div>
     }
-    // <input type={"button"} value={"Submit"} onClick={handleRegister}></input>
