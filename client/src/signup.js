@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export  default function Signup (){
@@ -10,7 +10,7 @@ export  default function Signup (){
     const [password , setPassword] =useState();
     const [phoneno, setphone] =useState();
     const [Role, setRole] =useState();
-    
+    const Navigate = useNavigate();
     const onTextFieldChange = (e)=>{
         console.log(e.target.name)
         
@@ -50,6 +50,7 @@ export  default function Signup (){
                     role: Role,
                 });
                 console.log("I am getting response from server", response);
+                Navigate('/login')
             } catch (e) {
                 console.log("I am getting error from server", e)              
             }
@@ -84,10 +85,10 @@ export  default function Signup (){
         <option value={"Employee"}>Employee</option>
         <option value={"Manager"}>Manager</option>
         </select>
+        <input type={"button"} value={"Submit"} onClick={handleRegister} ></input><br/>
         </form>
         <button>
-        <input type={"button"} value={"Submit"} onClick={handleRegister} ></input>
-        <Link to={"/login"} >Sign up</Link>
+        <Link to={"/login"} >Already have account</Link>
         </button>
         </div>
     
