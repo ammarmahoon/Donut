@@ -32,6 +32,8 @@ export default function Login (){
                     password : password,
                 });
                 console.log("I am getting response from server", response);
+                localStorage.setItem('login', 'success');
+                localStorage.setItem('loggedInUser', response.data);
                 Navigate('/welcome')
             } catch (e) {
                 console.log("I am getting error from server", e)              
@@ -42,19 +44,18 @@ export default function Login (){
         }
 
     }
+    return <div className="form">
 
-    
-    return <div>
-    <form>
-    <h1>Login Form</h1><br/>
-    <label>Email</label><br/>
+    <form className="centre">
+    <h1 className="heading">Login Form</h1><br/>
+    <label className="heading">Email</label><br/>
         <input name="mail" type={"email"} placeholder="abcxxxx@gmail.com" onChange={onTextFieldChange} value={email}></input><br/>
-        <label>Password</label><br/>
+        <label className="heading">Password</label><br/>
         <input name="pwd" type={"password"} placeholder="********" onChange={onTextFieldChange} value={password}></input><br/>
-        <input type={"button"} value={"Submit"} onClick={handleRegister}></input>
-        </form>
+        <input className="heading" type={"button"} value={"Submit"} onClick={handleRegister}></input>
         <button>
-        <Link to={"/signup"}>Don't have account</Link>
+        <Link className="heading" to={"/signup"}>Don't have account</Link>
         </button>
+        </form>
         </div>
     }

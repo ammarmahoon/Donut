@@ -88,20 +88,18 @@ else
 })
 
 
-let userMilGya = 0;
 app.post( "/login",(req, res)=>{
+    let userFound = 0;
     const users = readData();
     const { email, password } = req.body;
     for (let i = 0; i < users.length; i ++) {
 
         if ( email === users[i].email && password === users[i].password) {
-            userMilGya = 1;
-        } else {
-            userMilGya = 0;
-        }
+            userFound = users[i];
+        } 
     }
-    if(userMilGya == 1)
-    res.send({message:"Login Successfull"})
+    if(userFound)
+    res.send({message:"Login Successfull", userDetail:userFound})
     else {
         res.status(401).send({ error : "Incorrect Password" })
     }
@@ -112,7 +110,9 @@ app.post("/searchuser",(req, res) => {
     let foundUser ;
     const users = readData();
     const { searchStr } = req.body;
-
+    if(!searchStr){
+       return res.send({users});
+    }
     let allFindUsers = [];
 
     for (let i = 0; i < users.length; i ++) {
@@ -126,10 +126,10 @@ app.post("/searchuser",(req, res) => {
         }
     } 
     if(userExist == 1){
-        res.send({ allFindUsers})
+        res.send({users: allFindUsers})
     }
     else{
-        res.send({message : "User not found"})
+        res.send({users: [], message : "User not found"})
     }
 })
 
@@ -159,10 +159,10 @@ app.put("/update",(req, res) => {
 
     let requiredIndex = -1;
     const users = readData();
-    let { name , phoneNumber , newPhoneNumber} = req.body;
+    let { newName ,email, newPhoneNumber} = req.body;
     for (let i = 0; i < users.length; i ++)
     {
-        if ((users[i].phoneNumber)===phoneNumber)
+        if ((users[i].email)===email)
         {
             requiredIndex = i;
         }
@@ -170,9 +170,12 @@ app.put("/update",(req, res) => {
    if(requiredIndex != -1){
     if (newPhoneNumber){
         users[requiredIndex].phoneNumber = newPhoneNumber;
-    }
-     if(name){
-        users[requiredIndex].name = name;
+    }else if(newName){
+        users[requiredIndex].name = newName;
+        }
+    else if(newName && newPhoneNumber){
+        users[requiredIndex].phoneNumber = newPhoneNumber;
+        users[requiredIndex].name = newName;
     }
     writeData(users);
     res.send({ message : "User updated successfully"})
