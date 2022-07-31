@@ -16,7 +16,7 @@ export default function Login() {
       setPassword(e.target.value);
     }
   };
-  const handleRegister = async (e) => {
+  const handleRegister = async (event) => {
     console.log(email);
     console.log(password);
 
@@ -34,6 +34,7 @@ export default function Login() {
     } else {
       alert('Please completely filled all fields');
     }
+    event.preventDefault();
   };
 
   return (
@@ -43,23 +44,11 @@ export default function Login() {
         <br />
         <label>Email</label>
         <br />
-        <input
-          name="mail"
-          type={'email'}
-          placeholder="abcxxxx@gmail.com"
-          onChange={onTextFieldChange}
-          value={email}
-        />
+        <input name="mail" type={'email'} placeholder="abcxxxx@gmail.com" onChange={onTextFieldChange} value={email} />
         <br />
         <label>Password</label>
         <br />
-        <input
-          name="pwd"
-          type={'password'}
-          placeholder="********"
-          onChange={onTextFieldChange}
-          value={password}
-        />
+        <input name="pwd" type={'password'} placeholder="********" onChange={onTextFieldChange} value={password} />
         <br />
       </form>
       <button>

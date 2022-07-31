@@ -26,6 +26,7 @@ export default function Signup() {
     } else if (e.target.name === 'role') {
       setRole(e.target.value);
     }
+    e.preventDefault();
   };
 
   const handleRegister = async (e) => {
@@ -53,6 +54,7 @@ export default function Signup() {
     } else {
       alert('Please completely filled all fields');
     }
+    e.preventDefault();
   };
 
   return (
