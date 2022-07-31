@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from "react"
+import { Link } from "react-router-dom";
+import axios from "axios";
+import './addNew.css'
 
 export default function Signup() {
   const [firstName, setFirstName] = useState();
@@ -29,13 +30,26 @@ export default function Signup() {
     e.preventDefault();
   };
 
-  const handleRegister = async (e) => {
-    console.log(firstName);
-    console.log(surName);
-    console.log(email);
-    console.log(password);
-    console.log(phoneno);
-    console.log(Role);
+    const handleRegister = async (e)=>{
+
+        
+        if (firstName && surName && email && password &&  phoneno && Role) {
+            try {
+                await axios.post("http://localhost:4000/register",{
+                    name : firstName + ' ' + surName,
+                    email : email,
+                    password : password,
+                    phoneNumber: phoneno,
+                    role: Role,
+                });
+                Navigate('/login')
+            } catch (e) {
+                console.log("I am getting error from server", e)              
+            }
+        }
+        else{
+            alert("Please completely filled all fields")
+        }
 
     if (firstName && surName && email && password && phoneno && Role) {
       console.log('running');
@@ -55,78 +69,37 @@ export default function Signup() {
       alert('Please completely filled all fields');
     }
     e.preventDefault();
-  };
-
-  return (
-    <div>
-      <form>
-        <h1>Sign up Form</h1>
-        <br />
-        <label>Name</label>
-        <br />
-        <input
-          name="fName"
-          type={'text'}
-          placeholder="First Name"
-          onChange={onTextFieldChange}
-          value={firstName}
-        ></input>
-        <br />
-        <label>SurName</label>
-        <br />
-        <input
-          name="sName"
-          type={'text'}
-          placeholder="Second Name"
-          onChange={onTextFieldChange}
-          value={surName}
-        ></input>
-        <br />
-        <label>Email</label>
-        <br />
-        <input
-          name="mail"
-          type={'email'}
-          placeholder="abcxxxx@gmail.com"
-          onChange={onTextFieldChange}
-          value={email}
-        ></input>
-        <br />
-        <label>Password</label>
-        <br />
-        <input
-          name="pwd"
-          type={'password'}
-          placeholder="********"
-          onChange={onTextFieldChange}
-          value={password}
-        ></input>
-        <br />
-        <label>Phone Number</label>
-        <br />
-        <input
-          type={'text'}
-          name="number"
-          onChange={onTextFieldChange}
-          value={phoneno}
-          placeholder="03123456789"
-        ></input>
-        <br />
-        <label>Select Role</label>
-        <br />
-        <select name="role" onChange={onTextFieldChange} value={Role}>
-          <option>Choose</option>
-          <option value={'Admin'}>Admin</option>
-          <option value={'Super Admin'}>Super Admin</option>
-          <option value={'Contractor'}>Contractor</option>
-          <option value={'Employee'}>Employee</option>
-          <option value={'Manager'}>Manager</option>
+  }
+    
+        return <div className="form">
+        <form className="centre">
+        <h1 className="heading">Sign up Form</h1><br/>
+        <label className="heading">Name</label><br/>
+        <input name="fName" type={"text"} placeholder="First Name" onChange={onTextFieldChange} value={firstName}></input><br/>
+        <label className="heading">SurName</label><br/>
+        <input name="sName" type={"text"} placeholder="Second Name" onChange={onTextFieldChange} value={surName}></input><br/>
+        <label className="heading">Email</label><br/>
+        <input name="mail" type={"email"} placeholder="abcxxxx@gmail.com" onChange={onTextFieldChange} value={email}></input><br/>
+        <label className="heading">Password</label><br/>
+        <input name="pwd" type={"password"} placeholder="********" onChange={onTextFieldChange} value={password}></input><br/>
+        <label className="heading">Phone Number</label><br/>
+        <input type={"text"} name= "number" onChange={onTextFieldChange} value={phoneno} placeholder="03123456789"></input>
+        <br/>
+        <label className="heading">Select Role</label>
+        <br/>
+        <select name= "role" onChange={onTextFieldChange} value={Role}>
+        <option className="heading">Choose</option>
+        <option className="heading" value={"Admin"}>Admin</option>
+        <option className="heading" value={"Super Admin"}>Super Admin</option>
+        <option className="heading" value={"Contractor"}>Contractor</option>
+        <option className="heading" value={"Employee"}>Employee</option>
+        <option className="heading" value={"Manager"}>Manager</option>
         </select>
-      </form>
-      <button>
-        <input type={'button'} value={'Submit'} onClick={handleRegister}></input>
-        <Link to={'/login'}>Sign up</Link>
-      </button>
-    </div>
-  );
+        <input className="heading" type={"button"} value={"Submit"} onClick={handleRegister} ></input><br/>
+        <button >
+        <Link className="button" to={"/login"} >Already have account</Link>
+        </button>
+        </form>
+        </div>
+    
 }
