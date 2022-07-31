@@ -14,8 +14,8 @@
   },
   "plugins": ["react"],
   "rules": {
-    "indent": ["error", 4],
-    "linebreak-style": ["error", "windows"],
+    "indent": "off",
+    "indent-legacy": "off",
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "react/react-in-jsx-scope": "off"
