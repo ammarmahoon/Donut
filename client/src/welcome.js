@@ -2,29 +2,24 @@ import React, {useEffect, useState} from "react";
 import "./welcome.css"
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
 export default function Welcome (){
 
     const [data, setData]= useState();
-    const nav = useLocation();
-    console.log(nav.state);
     const Navigate =useNavigate();
-    const user = localStorage.getItem('loggedInUser');
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
 
     const getData = async (searchString) => {
         try {
             const response = await axios.post('http://localhost:4000/searchuser',{
                 searchStr : searchString
             })
-            console.log(response);
             setData(response.data);
         } catch (e) {
             console.log('I am getting error',e);
         }
     }
     // screen reload based on second parameter
-    useEffect(()=> {
-        console.log(user.role);        
+    useEffect(()=> {        
         if (!user) {
             return Navigate('/login');
         } else if (!data && user.role === 'Super Admin') {
@@ -35,11 +30,8 @@ export default function Welcome (){
 
 
     const deleteUser =async (phoneNumber)=>{
-        console.log(phoneNumber)
         try {
-            const response = await axios.delete("http://localhost:4000/deleteuser?phoneNumber="+phoneNumber,{               
-            });
-            console.log("I am getting response from server", response);
+             await axios.delete("http://localhost:4000/deleteuser?phoneNumber="+phoneNumber);
         } catch (e) {
             console.log("I am getting error from server", e)              
         }
@@ -48,17 +40,7 @@ export default function Welcome (){
     const update = (user) => {
         Navigate('/update', { state: user });
     }
-    const updateUser =async (email)=>{
-        try {
-            const response = await axios.post('http://localhost:4000/searchuser',{
-                searchStr : email
-            })
-            console.log(response);
-            Navigate('/update', {state:response.data})
-        } catch (e) {
-            console.log('I am getting error',e);
-        }
-    }
+    
     const searchUser = async (e)=>{
         if (e.target.value.length > 2) {
             await getData(e.target.value);
@@ -75,8 +57,7 @@ export default function Welcome (){
         Navigate("/")
         localStorage.removeItem('login')
      }  
-    
-    if(nav?.state?.userDetail?.role=== 'Super Admin'){
+    if(user?.role=== 'Super Admin'){
         return <div className="app">
         
         <h1 className="heading">Congratulations! Successfully Login</h1>

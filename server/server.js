@@ -9,7 +9,6 @@ const app = express();
 app.use(express.json());
 app.use(cors({origin:["http://localhost:3000"]}))
 const writeData = (users) => {
-    // console.log(user)
     fs.writeFileSync("./users.json", JSON.stringify(users))
 }
 
@@ -25,8 +24,7 @@ const readData = () => {
 }
 
 app.post( "/register",(req, res)=>{
-    console.log('i am get req body');
-    console.log(req.body);
+    
     const { name, email, password, phoneNumber, role } = req.body;
     // users => array of all users
 
@@ -61,11 +59,7 @@ app.post( "/register",(req, res)=>{
             phoneNumber,
             role
         };
-        // if (users === undefined) {
-        //     users = [user];
-        // } 
-        console.log('new user data');
-        console.log(user);     
+            
         users.push(user)
         
         
@@ -146,7 +140,6 @@ app.delete("/deleteuser",(req , res)=>{
     if(foundIndex !== -1){
      users.splice(foundIndex, 1);
      writeData(users)
-      console.log(users)
                 // sucess del
                 res.send({message : "Deleted Successfully"});
     } else {

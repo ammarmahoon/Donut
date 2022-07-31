@@ -12,9 +12,7 @@ export  default function AddNew (){
     const [Role, setRole] =useState();
     const Navigate = useNavigate();
     const password = 'Password1!';
-    const onTextFieldChange = (e)=>{
-        console.log(e.target.name)
-        
+    const onTextFieldChange = (e)=>{        
         if(e.target.name=== 'fName'){
             setFirstName(e.target.value)
         }else if(e.target.name=== 'sName'){
@@ -31,23 +29,17 @@ export  default function AddNew (){
 
     const handleRegister = async (e)=>{
 
-        console.log(firstName)
-        console.log(surName)
-        console.log(email)
-        console.log(phoneno);
-        console.log(Role)
+
 
         if (firstName && surName && email && password &&  phoneno && Role) {
-            console.log("running");
             try {
-                const response = await axios.post("http://localhost:4000/register",{
+                await axios.post("http://localhost:4000/register",{
                     name : firstName + ' ' + surName,
                     email : email,
                     password : password,
                     phoneNumber: phoneno,
                     role: Role,
                 });
-                console.log("I am getting response from server", response);
                 Navigate('/welcome')
             } catch (e) {
                 console.log("I am getting error from server", e)              

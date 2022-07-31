@@ -11,7 +11,7 @@ export default function Login (){
     const [password, setPassword] = useState();
     const Navigate = useNavigate()
     const onTextFieldChange = (e)=>{
-        console.log(e.target.name)
+    
         
         if(e.target.name=== 'mail'){
             setEmail(e.target.value)
@@ -21,19 +21,17 @@ export default function Login (){
     }
     const handleRegister = async (e)=>{
 
-        console.log(email)
-        console.log(password)
+    
 
         if ( email && password ) {
-            console.log("running");
             try {
                 const response = await axios.post("http://localhost:4000/login",{
                     email : email,
                     password : password,
                 });
-                console.log("I am getting response from server", response);
+                
                 localStorage.setItem('login', 'success');
-                localStorage.setItem('loggedInUser', response.data);
+                localStorage.setItem('loggedInUser', JSON.stringify(response.data.userDetail));
                 Navigate('/welcome')
             } catch (e) {
                 console.log("I am getting error from server", e)              
