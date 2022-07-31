@@ -9,7 +9,6 @@ const app = express();
 app.use(express.json());
 app.use(cors({origin:["http://localhost:3000"]}))
 const writeData = (users) => {
-    // console.log(user)
     fs.writeFileSync("./users.json", JSON.stringify(users))
 }
 
@@ -25,8 +24,7 @@ const readData = () => {
 }
 
 app.post( "/register",(req, res)=>{
-    console.log('i am get req body');
-    console.log(req.body);
+    
     const { name, email, password, phoneNumber, role } = req.body;
     // users => array of all users
 
@@ -61,11 +59,7 @@ app.post( "/register",(req, res)=>{
             phoneNumber,
             role
         };
-        // if (users === undefined) {
-        //     users = [user];
-        // } 
-        console.log('new user data');
-        console.log(user);     
+            
         users.push(user)
         
         
@@ -88,20 +82,20 @@ else
 })
 
 
-let userMilGya = 0;
 app.post( "/login",(req, res)=>{
+    let userFound = 0;
     const users = readData();
     const { email, password } = req.body;
     for (let i = 0; i < users.length; i ++) {
 
         if ( email === users[i].email && password === users[i].password) {
-            userMilGya = 1;
+            userFound = users[i];
         } 
     }
-    if(userMilGya == 1)
-    res.send({message:"Login Successfull"})
+    if(userFound)
+    res.send({message:"Login Successfull", userDetail:userFound})
     else {
-        res.send({message:"Login Failed"})
+        res.status(401).send({ error : "Incorrect Password" })
     }
 })
 
@@ -110,7 +104,9 @@ app.post("/searchuser",(req, res) => {
     let foundUser ;
     const users = readData();
     const { searchStr } = req.body;
-
+    if(!searchStr){
+       return res.send({users});
+    }
     let allFindUsers = [];
 
     for (let i = 0; i < users.length; i ++) {
@@ -124,10 +120,10 @@ app.post("/searchuser",(req, res) => {
         }
     } 
     if(userExist == 1){
-        res.send({ allFindUsers})
+        res.send({users: allFindUsers})
     }
     else{
-        res.send({message : "User not found"})
+        res.send({users: [], message : "User not found"})
     }
 })
 
@@ -144,7 +140,6 @@ app.delete("/deleteuser",(req , res)=>{
     if(foundIndex !== -1){
      users.splice(foundIndex, 1);
      writeData(users)
-      console.log(users)
                 // sucess del
                 res.send({message : "Deleted Successfully"});
     } else {
@@ -157,10 +152,10 @@ app.put("/update",(req, res) => {
 
     let requiredIndex = -1;
     const users = readData();
-    let { name , phoneNumber , newPhoneNumber} = req.body;
+    let { newName ,email, newPhoneNumber} = req.body;
     for (let i = 0; i < users.length; i ++)
     {
-        if ((users[i].phoneNumber)===phoneNumber)
+        if ((users[i].email)===email)
         {
             requiredIndex = i;
         }
@@ -168,9 +163,12 @@ app.put("/update",(req, res) => {
    if(requiredIndex != -1){
     if (newPhoneNumber){
         users[requiredIndex].phoneNumber = newPhoneNumber;
-    }
-     if(name){
-        users[requiredIndex].name = name;
+    }else if(newName){
+        users[requiredIndex].name = newName;
+        }
+    else if(newName && newPhoneNumber){
+        users[requiredIndex].phoneNumber = newPhoneNumber;
+        users[requiredIndex].name = newName;
     }
     writeData(users);
     res.send({ message : "User updated successfully"})
